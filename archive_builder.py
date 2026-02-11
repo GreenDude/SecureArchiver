@@ -74,7 +74,8 @@ class ArchiveBuilder:
     def _simple_archiver(self, arc_name: str):
         with zipfile.ZipFile(arc_name, 'w') as arc:
             for source in self._sources:
-                arc.write(source)
+                src_path = Path(source)
+                arc.write(source, arcname= self._archive_file_name + "/" + src_path.name)
 
 
     def _encrypted_archiver(self, arc_name: str):
@@ -87,7 +88,7 @@ class ArchiveBuilder:
         ) as arc:
             arc.setencryption(pyzipper.WZ_AES, nbits=self._encryption_strength)
             arc.setpassword(pwd)
-            arc.writestr('test.txt', "What ever you do, don't tell anyone!")
+            # arc.writestr('test.txt', "What ever you do, don't tell anyone!")
             for src in self._sources:
                 src_path = Path(src)
                 arc.write(src, arcname=src_path.name)  # store clean name in zip
